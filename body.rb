@@ -1,4 +1,4 @@
-#require "gosu"
+require "./vector"
 class Body
 
   attr_accessor :x, :y, :vel_x, :vel_y, :mass
@@ -16,8 +16,10 @@ class Body
     @y += @vel_y
   end
   
-  def draw
-    @img.draw_rot(@x, @y, 1, 0)
+  def draw(drawScale)
+    dx = (@x/drawScale*2)+320
+    dy = (@y/drawScale*2)+320
+    @img.draw_rot(dx, dy, 1, 0)
   end
 
 end

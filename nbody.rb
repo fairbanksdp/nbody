@@ -18,26 +18,8 @@ class NbodySimulation < Gosu::Window
     @background_image = Gosu::Image.new("images/space.jpg", tileable: true)
     @uniScale = uniSize/640
     @bodies = bodies.each.map do|infoStr|
-      bodyInfo = infoStr.split
-      bI = 4.times.map {|info|scaling(bodyInfo[info-1])}
-      bI[4] = bodyInfo[4]
-      bI[5] = bodyInfo[5]
-      Body.new(shifting(bI[0]), shifting(bI[1]), bI[2], bI[3], bI[4], bI[5])
-    end
-  end
-  
-  def scaling(num, down? = true)
-    if down?
-      return (num.to_f)/(@uniScale*2)
-    else
-      return num*(@uniScale*2)
-    end
-  end
-  def shifting(num, down? = true)
-    if down?
-      return (num + 320)
-    else
-      return (num - 320)
+      bI = infoStr.split
+      Body.new(bI[0], bI[1], bI[2], bI[3], bI[4], bI[5])
     end
   end
 
@@ -48,7 +30,6 @@ class NbodySimulation < Gosu::Window
     end
   end
   def radius(x1,y1,x2,y2)
-    
 
   end
   def update
@@ -58,7 +39,7 @@ class NbodySimulation < Gosu::Window
   def draw
     @background_image.draw(0, 0, ZOrder::Background)
     @bodies.each do|body|
-      body.draw
+      body.draw(@uniScale)
     end
   end
 
@@ -73,3 +54,4 @@ n = universeInfo.shift.to_i
 s = universeInfo.shift.to_f
 window = NbodySimulation.new(n, s, universeInfo)
 window.show
+

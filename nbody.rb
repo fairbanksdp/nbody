@@ -1,6 +1,7 @@
 require "gosu"
 require_relative "z_order"
 require "./body"
+require "./vector"
 G = 6.67408e-11
 _f = ARGV 
 if _f[0] == nil
@@ -18,16 +19,28 @@ class NbodySimulation < Gosu::Window
     @background_image = Gosu::Image.new("images/space.jpg", tileable: true)
     @uniScale = uniSize/640
     @bodies = bodies.each.map do|infoStr|
-      bI = infoStr.split
-      Body.new(bI[0], bI[1], bI[2], bI[3], bI[4], bI[5])
+      bodyInfo = infoStr.split
+      bI = 5.times.map {|n|bodyInfo[n-1].to_f}
+      Body.new(bI[0], bI[1], bI[2], bI[3], bI[4], bodyInfo[5])
     end
   end
 
   def physics
-    @bodies.each do|body|
-      
-
+    vectors = []
+    count1 = 0
+    count2 = 0
+    @bodies.each do|body1|
+      @bodies.each do|body2|
+        if count1 != count2
+          vectors.push(Vect.new(body1.x,body1.y,body2.x,body2.y))
+	else
+	end
+        count2++
+      end
+      count2 = 0
+      count1++
     end
+    puts "#{vectors}"
   end
   def radius(x1,y1,x2,y2)
 
@@ -53,5 +66,6 @@ end
 n = universeInfo.shift.to_i
 s = universeInfo.shift.to_f
 window = NbodySimulation.new(n, s, universeInfo)
+window.physics
 window.show
 

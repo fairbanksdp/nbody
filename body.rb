@@ -16,9 +16,12 @@ class Body
     @y += @vel_y
   end
   
+  def update
+    #ve
+  end
   def draw(drawScale)
-    dx = (@x/drawScale*2)+320
-    dy = (@y/drawScale*2)+320
+    dx = (@x/(drawScale*2))+320
+    dy = (@y/(drawScale*2))+320
     @img.draw_rot(dx, dy, 1, 0)
   end
 

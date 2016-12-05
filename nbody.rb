@@ -25,35 +25,38 @@ class NbodySimulation < Gosu::Window
     end
   end
 
-  def physics
-    vectors = []
-    count1 = 0
-    count2 = 0
-    @bodies.each do|body1|
-      @bodies.each do|body2|
-        if count1 != count2
-          vectors.push(Vect.new(body1.x,body1.y,body2.x,body2.y))
-	else
-	end
-        count2++
+  def physics(body1)
+    @bodies.each do|body2|
+      if body1.x != body2.x || body1.y != body2.y
+        posDif = Vect.new(body1.x,body1.y,body2.x,body2.y)
+        posDif.update(body1.x,body1.y,body2.x,body2.y)
+	force = ((body1.mass)*(body2.mass)*G)/(posDif.mag**2)
+	#body1.update(force*Math.cos(posDif.rad), force*Math.sin(posDif.rad))
+	body1.update(force*posDif.unitVect[0], force*posDif.unitVect[1])
       end
-      count2 = 0
-      count1++
     end
-    puts "#{vectors}"
   end
   def radius(x1,y1,x2,y2)
 
   end
   def update
-    
   end
 
   def draw
     @background_image.draw(0, 0, ZOrder::Background)
+    #update()
+    @bodies.each do|body1|
+      physics(body1)
+      body1.move
+    end
+    @bodies.each do|body1|
+      #body1.move
+    end
     @bodies.each do|body|
       body.draw(@uniScale)
     end
+    print "test"
+    $stdout.flush
   end
 
   def button_down(id)
@@ -66,6 +69,6 @@ end
 n = universeInfo.shift.to_i
 s = universeInfo.shift.to_f
 window = NbodySimulation.new(n, s, universeInfo)
-window.physics
+#window.physics
 window.show
 

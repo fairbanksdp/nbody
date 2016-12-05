@@ -12,12 +12,12 @@ class Vect
     @y = y2 - y1
     @vect = Vector[@x,@y]
     @unitVect = @vect.normalize
-    uX = @unitVect[0]
-    uY = @unitVect[1]
+    @uX = @unitVect[0]
+    @uY = @unitVect[1]
     @mag = @vect.r
-    if uY >= 0
+    if @uY >= 0
       @rad = @vect.angle_with(Vector[1,0])
-    elsif uY < 0
+    elsif @uY < 0
       rad = @vect.angle_with(Vector[1,0])
       @rad = Pi + rad
     end

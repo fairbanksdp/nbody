@@ -20,38 +20,44 @@ class NbodySimulation < Gosu::Window
     @uniScale = uniSize/640
     @bodies = bodies.each.map do|infoStr|
       bodyInfo = infoStr.split
-      bI = 5.times.map {|n|bodyInfo[n-1].to_f}
+#      bodyInfo.each {|n|print "#{n}\n"}
+      bI = 5.times.map {|n|bodyInfo[n].to_f}
       Body.new(bI[0], bI[1], bI[2], bI[3], bI[4], bodyInfo[5])
     end
+    @time = 1000000/numOfBodies
   end
 
-  def physics
-    vectors = []
-    count1 = 0
-    count2 = 0
-    @bodies.each do|body1|
-      @bodies.each do|body2|
-        if count1 != count2
-          vectors.push(Vect.new(body1.x,body1.y,body2.x,body2.y))
-	end
-        count2++
+  def physics(body1)
+    @bodies.each do|body2|
+#      print "body1(#{body1.pos_x}, #{body1.pos_y}) "
+#      print "body2(#{body2.pos_x}, #{body2.pos_y})\n"
+      if !(body1.pos_x == body2.pos_x && body1.pos_y == body2.pos_y)
+#        print "!!!TRIGGERED!!!"
+        posDif = Vect.new(body1.pos_x,body1.pos_y,body2.pos_x,body2.pos_y)
+        #posDif.update(body1.x,body1.y,body2.x,body2.y)
+#	print "radi: #{posDif.mag}; \n"
+#	print "m1: #{body1.mass}; \n"
+#	print "m2: #{body2.mass}; \n"
+	force = ((body1.mass)*(body2.mass)*G)/(posDif.mag**2)
+#	print "force: #{force}; \n"
+	body1.update(force*posDif.unitVect[0], force*posDif.unitVect[1])
       end
-      count2 = 0
-      count1++
+#      print "\n\n"
     end
-    puts "#{vectors}"
-  end
-  def radius(x1,y1,x2,y2)
-
   end
   def update
-    
+#      if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft then
+    @bodies.each do|body1|
+      physics(body1)
+    end
+#    end
   end
 
   def draw
     @background_image.draw(0, 0, ZOrder::Background)
     @bodies.each do|body|
       body.draw(@uniScale)
+      body.move(@time)
     end
   end
 
@@ -64,7 +70,8 @@ class NbodySimulation < Gosu::Window
 end
 n = universeInfo.shift.to_i
 s = universeInfo.shift.to_f
+#print "#{universeInfo.pop}"
 window = NbodySimulation.new(n, s, universeInfo)
-window.physics
+#window.physics
 window.show
 

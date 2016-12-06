@@ -10,21 +10,29 @@ end
 f = File.open("simulations/#{_f[0]}", "r")
 universeInfo = f.each_line.map {|line|line}
 f.close
-
+if _f[1] == nil
+  _f[1] = 640
+end
+ScreenSize = _f[1].to_i
+n = universeInfo.shift.to_i
+if _f[2] == nil
+  _f[2] = 1
+end
+TimeScale = (_f[2].to_f)*1000000/n
 class NbodySimulation < Gosu::Window
 
   def initialize(numOfBodies, uniSize, bodies = [])
-    super(640, 640, false)
+    super(ScreenSize, ScreenSize, false)
     self.caption = "NBody simulation"
     @background_image = Gosu::Image.new("images/space.jpg", tileable: true)
-    @uniScale = uniSize/640
+    @uniScale = uniSize/ScreenSize
     @bodies = bodies.each.map do|infoStr|
       bodyInfo = infoStr.split
 #      bodyInfo.each {|n|print "#{n}\n"}
       bI = 5.times.map {|n|bodyInfo[n].to_f}
       Body.new(bI[0], bI[1], bI[2], bI[3], bI[4], bodyInfo[5])
     end
-    @time = 1000000/numOfBodies
+    @time = TimeScale
   end
 
   def physics(body1)
@@ -46,11 +54,9 @@ class NbodySimulation < Gosu::Window
     end
   end
   def update
-#      if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft then
     @bodies.each do|body1|
       physics(body1)
     end
-#    end
   end
 
   def draw
@@ -68,7 +74,6 @@ class NbodySimulation < Gosu::Window
   end
   
 end
-n = universeInfo.shift.to_i
 s = universeInfo.shift.to_f
 #print "#{universeInfo.pop}"
 window = NbodySimulation.new(n, s, universeInfo)

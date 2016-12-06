@@ -30,8 +30,8 @@ class Body
   end
   def draw(drawScale)
     #print "#{drawScale}\n"
-    dx = (@x/(drawScale*2))+320
-    dy = (@y/(drawScale*2))+320
+    dx = (@x/(drawScale*2))+(ScreenSize/2)
+    dy = (@y/(drawScale*2))+(ScreenSize/2)
     #print "dx: #{dx} dy: #{dy}\n"
     @img.draw_rot(dx, dy, 1, 0)
   end

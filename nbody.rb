@@ -33,7 +33,6 @@ class NbodySimulation < Gosu::Window
       @bodies.each do|body2|
         if count1 != count2
           vectors.push(Vect.new(body1.x,body1.y,body2.x,body2.y))
-	else
 	end
         count2++
       end
